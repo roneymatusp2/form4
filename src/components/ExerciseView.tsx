@@ -132,9 +132,9 @@ export function ExerciseView({ exercise, allExercises, completedExercises, onCom
     }
   };
 
-  const checkAnswerWithAI = async (answer: string, correctAnswer: string | number) => {
+  const checkAnswerWithAI = async (answer: string, correctAnswer: string | number, imageData?: string) => {
     setIsEvaluating(true);
-    
+
     try {
       if (geminiService.isAvailable()) {
         try {
@@ -142,7 +142,8 @@ export function ExerciseView({ exercise, allExercises, completedExercises, onCom
             answer,
             correctAnswer,
             exercise.question,
-            exercise.hint
+            exercise.hint,
+            imageData
           );
 
           setFeedback({
@@ -213,11 +214,13 @@ export function ExerciseView({ exercise, allExercises, completedExercises, onCom
 
             if (geminiService.isAvailable()) {
               try {
+                const partImage = partImages[idx];
                 const result = await geminiService.evaluateAnswer(
                   userAns,
                   part.answer || '',
                   `${part.label} ${part.question}`,
-                  exercise.hint
+                  exercise.hint,
+                  partImage
                 );
                 return {
                   isCorrect: result.isCorrect,
@@ -285,7 +288,7 @@ export function ExerciseView({ exercise, allExercises, completedExercises, onCom
         setIsEvaluating(false);
       }
     } else {
-      await checkAnswerWithAI(userAnswer, exercise.answer || '');
+      await checkAnswerWithAI(userAnswer, exercise.answer || '', answerImage || undefined);
     }
   };
 
@@ -301,6 +304,16 @@ export function ExerciseView({ exercise, allExercises, completedExercises, onCom
 
   return (
     <div className="max-w-7xl mx-auto animate-fade-in">
+      {/* Hidden file input for image uploads */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        capture="environment"
+        onChange={(e) => handleImageUpload(e, uploadingForPart === -1 ? undefined : uploadingForPart ?? undefined)}
+        className="hidden"
+      />
+
       <ExerciseNavigation
         currentExercise={exercise}
         allExercises={allExercises}
@@ -308,7 +321,7 @@ export function ExerciseView({ exercise, allExercises, completedExercises, onCom
         onNavigate={onNavigate}
         onBackToList={onBackToList}
       />
-      
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Main Exercise Card */}
         <div className="lg:col-span-2">
@@ -373,15 +386,49 @@ export function ExerciseView({ exercise, allExercises, completedExercises, onCom
                               )
                             )}
                           </div>
-                          <input
-                            type="text"
-                            value={partAnswers[idx] || ''}
-                            onChange={(e) => setPartAnswers({ ...partAnswers, [idx]: e.target.value })}
-                            className="w-full px-4 py-3 border-2 border-slate-300 rounded-lg focus:border-purple-500 focus:ring-4 focus:ring-purple-100 transition-all text-lg"
-                            placeholder="Enter your answer"
-                            disabled={isEvaluating}
-                          />
+                          <div className="flex gap-3">
+                            <input
+                              type="text"
+                              value={partAnswers[idx] || ''}
+                              onChange={(e) => setPartAnswers({ ...partAnswers, [idx]: e.target.value })}
+                              className="flex-1 px-4 py-3 border-2 border-slate-300 rounded-lg focus:border-purple-500 focus:ring-4 focus:ring-purple-100 transition-all text-lg"
+                              placeholder="Enter your answer or upload image"
+                              disabled={isEvaluating}
+                            />
+                            <button
+                              type="button"
+                              onClick={() => triggerImageUpload(idx)}
+                              disabled={isEvaluating}
+                              className="px-4 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-bold transition-all flex items-center gap-2 disabled:opacity-50"
+                              title="Upload handwritten answer"
+                            >
+                              <Camera size={18} />
+                            </button>
+                          </div>
                         </label>
+
+                        {/* Image preview for this part */}
+                        {partImages[idx] && (
+                          <div className="mt-3 relative bg-slate-50 rounded-lg p-3 border-2 border-indigo-300">
+                            <div className="flex items-start gap-2">
+                              <ImageIcon size={16} className="text-indigo-600 mt-1" />
+                              <div className="flex-1">
+                                <p className="text-xs font-medium text-slate-700 mb-2">Uploaded Answer</p>
+                                <img
+                                  src={partImages[idx]}
+                                  alt={`Answer for ${part.label}`}
+                                  className="max-h-32 rounded border border-slate-300"
+                                />
+                              </div>
+                              <button
+                                onClick={() => removeImage(idx)}
+                                className="text-slate-400 hover:text-red-600 transition-colors"
+                              >
+                                <X size={16} />
+                              </button>
+                            </div>
+                          </div>
+                        )}
 
                         {/* Individual part feedback */}
                         {hasFeedback && (
@@ -415,23 +462,58 @@ export function ExerciseView({ exercise, allExercises, completedExercises, onCom
 
               {/* Text input */}
               {exercise.type === 'text-input' && (
-                <div>
+                <div className="space-y-4">
                   <label className="block">
                     <span className="font-bold text-slate-800 text-lg mb-3 block">Your Answer:</span>
-                    <input
-                      type="text"
-                      value={userAnswer}
-                      onChange={(e) => setUserAnswer(e.target.value)}
-                      onKeyPress={(e) => {
-                        if (e.key === 'Enter' && userAnswer.trim() && !isEvaluating) {
-                          checkAnswer();
-                        }
-                      }}
-                      className="w-full px-6 py-4 border-2 border-slate-300 rounded-xl focus:border-purple-500 focus:ring-4 focus:ring-purple-100 transition-all text-lg"
-                      placeholder="Enter your answer"
-                      disabled={isEvaluating}
-                    />
+                    <div className="flex gap-3">
+                      <input
+                        type="text"
+                        value={userAnswer}
+                        onChange={(e) => setUserAnswer(e.target.value)}
+                        onKeyPress={(e) => {
+                          if (e.key === 'Enter' && userAnswer.trim() && !isEvaluating) {
+                            checkAnswer();
+                          }
+                        }}
+                        className="flex-1 px-6 py-4 border-2 border-slate-300 rounded-xl focus:border-purple-500 focus:ring-4 focus:ring-purple-100 transition-all text-lg"
+                        placeholder="Enter your answer or upload image"
+                        disabled={isEvaluating}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => triggerImageUpload()}
+                        disabled={isEvaluating}
+                        className="px-6 py-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold transition-all flex items-center gap-2 disabled:opacity-50"
+                        title="Upload handwritten answer"
+                      >
+                        <Camera size={20} />
+                        Upload
+                      </button>
+                    </div>
                   </label>
+
+                  {/* Image preview */}
+                  {answerImage && (
+                    <div className="relative bg-slate-50 rounded-xl p-4 border-2 border-indigo-300">
+                      <div className="flex items-start gap-3">
+                        <ImageIcon size={20} className="text-indigo-600 mt-1" />
+                        <div className="flex-1">
+                          <p className="text-sm font-medium text-slate-700 mb-2">Uploaded Answer</p>
+                          <img
+                            src={answerImage}
+                            alt="Your handwritten answer"
+                            className="max-h-48 rounded-lg border border-slate-300"
+                          />
+                        </div>
+                        <button
+                          onClick={() => removeImage()}
+                          className="text-slate-400 hover:text-red-600 transition-colors"
+                        >
+                          <X size={20} />
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
 
