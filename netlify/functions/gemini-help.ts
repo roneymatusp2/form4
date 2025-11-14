@@ -80,8 +80,13 @@ Keep your language simple, encouraging, and appropriate for IGCSE students.`;
     const data = await response.json();
     const text = data.candidates[0].content.parts[0].text;
     
-    // Remove markdown code blocks if present
-    const cleanText = text.replace(/```json\n?|\n?```/g, '').trim();
+    // Remove markdown code blocks more aggressively
+    let cleanText = text.trim();
+    cleanText = cleanText.replace(/^```json\s*/i, '');
+    cleanText = cleanText.replace(/^```\s*/i, '');
+    cleanText = cleanText.replace(/\s*```$/i, '');
+    cleanText = cleanText.trim();
+    
     const result = JSON.parse(cleanText);
 
     return {

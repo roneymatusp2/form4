@@ -40,22 +40,24 @@ Student's Answer: ${userAnswer}
 
 Evaluate if the student's answer is correct. Be VERY flexible and consider:
 
-1. NUMBERS - Accept both numeric and written forms
+1. NUMBERS - Accept both numeric and written forms (e.g., "18.32015936" ≈ "18.280557")
 2. MATHEMATICAL EXPRESSIONS - Accept equivalent forms
 3. FRACTIONS - Accept equivalent forms
 4. UNITS - Accept variations
-5. ROUNDING - Accept if within tolerance
+5. ROUNDING - Accept if within reasonable tolerance (±0.1 for decimals)
 6. FORMATTING - Accept different presentations
 
-IMPORTANT: Use British English spelling and terminology.
+CRITICAL: You MUST respond with ONLY valid JSON. No other text before or after.
 
-Respond ONLY with valid JSON:
+Format:
 {
-  "isCorrect": true or false,
+  "isCorrect": true,
   "confidence": 0.95,
-  "feedback": "Brief, encouraging feedback (1-2 sentences)",
-  "suggestions": ["specific suggestion 1", "specific suggestion 2"]
-}`;
+  "feedback": "Brief, encouraging feedback in British English",
+  "suggestions": []
+}
+
+Use British English spelling and terminology.`;
 
     // Call Gemini API
     const response = await fetch(
@@ -89,8 +91,13 @@ Respond ONLY with valid JSON:
     const data = await response.json();
     const text = data.candidates[0].content.parts[0].text;
     
-    // Remove markdown code blocks if present
-    const cleanText = text.replace(/```json\n?|\n?```/g, '').trim();
+    // Remove markdown code blocks more aggressively
+    let cleanText = text.trim();
+    cleanText = cleanText.replace(/^```json\s*/i, '');
+    cleanText = cleanText.replace(/^```\s*/i, '');
+    cleanText = cleanText.replace(/\s*```$/i, '');
+    cleanText = cleanText.trim();
+    
     const result = JSON.parse(cleanText);
 
     return {
