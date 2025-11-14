@@ -79,7 +79,7 @@ export function ExerciseList({ exercises, completedExercises, onSelectExercise }
           </div>
           <div className="flex-1">
             <h1 className="text-4xl font-bold text-slate-800 mb-3">
-              GCSE Mathematics Practice
+              IGCSE Mathematics Practice
             </h1>
             <p className="text-slate-600 text-lg leading-relaxed">
               Master key mathematical concepts with comprehensive exercises organised by topic.

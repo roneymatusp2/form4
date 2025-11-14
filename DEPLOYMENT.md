@@ -1,4 +1,4 @@
-# Deployment Guide - GCSE Mathematics Practice
+# Deployment Guide - IGCSE Mathematics Practice
 
 ## Secure Gemini API Integration
 
@@ -41,8 +41,8 @@ In Netlify dashboard:
 1. Go to **Site settings** → **Environment variables**
 2. Click **"Add a variable"**
 3. Add:
-   - **Key**: `GEMINI_API_KEY`
-   - **Value**: Your Gemini API key from [Google AI Studio](https://aistudio.google.com/app/apikey)
+   - **Key**: `GEMINI_FORM4`
+   - **Value**: Your Gemini API key
 4. Click **"Save"**
 
 ### 4. Redeploy
@@ -98,12 +98,12 @@ VITE_GEMINI_API_KEY=your_key_here
 
 ### Production (Netlify Dashboard)
 ```
-GEMINI_API_KEY=your_key_here
+GEMINI_FORM4=your_key_here
 ```
 
 **Note**: Different variable names for security!
 - `VITE_*` variables are exposed to browser (dev only)
-- `GEMINI_API_KEY` is server-side only (production)
+- `GEMINI_FORM4` is server-side only (production)
 
 ## Security Features
 

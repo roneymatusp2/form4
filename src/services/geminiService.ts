@@ -114,7 +114,7 @@ export class GeminiService {
       throw new Error('Gemini API key not configured');
     }
 
-    const prompt = `You are a patient and encouraging GCSE mathematics teacher helping a student understand a concept.
+    const prompt = `You are a patient and encouraging IGCSE mathematics teacher helping a student understand a concept.
 
 Topic: ${topic}
 Question: ${question}
@@ -130,7 +130,7 @@ Respond ONLY with valid JSON in this exact format:
   "example": "A simple example to illustrate the concept (optional)"
 }
 
-Keep your language simple, encouraging, and appropriate for GCSE students.`;
+Keep your language simple, encouraging, and appropriate for IGCSE students.`;
 
     const response = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${apiKey}`,
@@ -180,7 +180,7 @@ Keep your language simple, encouraging, and appropriate for GCSE students.`;
       throw new Error('Gemini API key not configured');
     }
 
-    const prompt = `You are a patient and encouraging GCSE mathematics teacher evaluating a student's answer.
+    const prompt = `You are a patient and encouraging IGCSE mathematics teacher evaluating a student's answer.
 
 Question: ${question}
 ${hint ? `Hint: ${hint}` : ''}

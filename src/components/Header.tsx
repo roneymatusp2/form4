@@ -29,7 +29,7 @@ export function Header({ totalExercises, completedCount, onBackToList }: HeaderP
               </div>
               <div>
                 <h1 className="text-2xl font-bold text-white">
-                  GCSE Mathematics
+                  IGCSE Mathematics
                 </h1>
                 <p className="text-white/80 text-sm">
                   Practice Exercises

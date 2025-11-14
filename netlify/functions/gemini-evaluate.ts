@@ -1,6 +1,6 @@
 import { Handler } from '@netlify/functions';
 
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+const GEMINI_API_KEY = process.env.GEMINI_FORM4;
 const GEMINI_MODEL = 'gemini-2.0-flash-exp';
 
 interface EvaluateRequest {
@@ -31,7 +31,7 @@ export const handler: Handler = async (event) => {
     const { userAnswer, correctAnswer, question, hint }: EvaluateRequest = JSON.parse(event.body || '{}');
 
     // Build prompt
-    const prompt = `You are a patient and encouraging GCSE mathematics teacher evaluating a student's answer.
+    const prompt = `You are a patient and encouraging IGCSE mathematics teacher evaluating a student's answer.
 
 Question: ${question}
 ${hint ? `Hint: ${hint}` : ''}

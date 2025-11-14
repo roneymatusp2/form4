@@ -1,6 +1,6 @@
 import { Handler } from '@netlify/functions';
 
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+const GEMINI_API_KEY = process.env.GEMINI_FORM4;
 const GEMINI_MODEL = 'gemini-2.0-flash-exp';
 
 interface HelpRequest {
@@ -30,7 +30,7 @@ export const handler: Handler = async (event) => {
     const { question, topic, userQuestion }: HelpRequest = JSON.parse(event.body || '{}');
 
     // Build prompt
-    const prompt = `You are a patient and encouraging GCSE mathematics teacher helping a student understand a concept.
+    const prompt = `You are a patient and encouraging IGCSE mathematics teacher helping a student understand a concept.
 
 Topic: ${topic}
 Question: ${question}
@@ -46,7 +46,7 @@ Respond ONLY with valid JSON:
   "example": "A simple example to illustrate the concept (optional)"
 }
 
-Keep your language simple, encouraging, and appropriate for GCSE students.`;
+Keep your language simple, encouraging, and appropriate for IGCSE students.`;
 
     // Call Gemini API
     const response = await fetch(

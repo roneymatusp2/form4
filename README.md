@@ -1,6 +1,6 @@
 # Form 4 Mathematics Practice
 
-A modern, interactive GCSE Mathematics practice application with AI-powered tutoring.
+A modern, interactive IGCSE Mathematics practice application with AI-powered tutoring.
 
 ## Features
 
@@ -67,4 +67,4 @@ MIT
 
 ## Author
 
-Created for GCSE Mathematics students
+Created for IGCSE Mathematics students
