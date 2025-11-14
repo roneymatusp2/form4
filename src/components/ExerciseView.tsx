@@ -25,6 +25,11 @@ export function ExerciseView({ exercise, allExercises, completedExercises, onCom
     suggestions?: string[];
     usedAI?: boolean;
   } | null>(null);
+  const [partFeedbacks, setPartFeedbacks] = useState<Record<number, {
+    correct: boolean;
+    message: string;
+    suggestions?: string[];
+  }>>({});
   const [showHint, setShowHint] = useState(false);
   const [isEvaluating, setIsEvaluating] = useState(false);
   
@@ -42,6 +47,7 @@ export function ExerciseView({ exercise, allExercises, completedExercises, onCom
     setPartAnswers({});
     setSelectedChoice(null);
     setFeedback(null);
+    setPartFeedbacks({});
     setShowHint(false);
   };
 
@@ -142,12 +148,19 @@ export function ExerciseView({ exercise, allExercises, completedExercises, onCom
       }
     } else if (exercise.type === 'multi-part') {
       setIsEvaluating(true);
-      
+
       try {
-        const results = await Promise.all(
+        const detailedResults = await Promise.all(
           (exercise.parts || []).map(async (part, idx) => {
             const userAns = partAnswers[idx] || '';
-            if (!userAns.trim()) return false;
+            if (!userAns.trim()) {
+              return {
+                isCorrect: false,
+                feedback: 'Please provide an answer.',
+                suggestions: [],
+                index: idx
+              };
+            }
 
             if (geminiService.isAvailable()) {
               try {
@@ -157,31 +170,62 @@ export function ExerciseView({ exercise, allExercises, completedExercises, onCom
                   `${part.label} ${part.question}`,
                   exercise.hint
                 );
-                return result.isCorrect;
+                return {
+                  isCorrect: result.isCorrect,
+                  feedback: result.feedback,
+                  suggestions: result.suggestions || [],
+                  index: idx
+                };
               } catch {
-                const tolerance = typeof part.answer === 'number' && part.answerTolerance 
-                  ? part.answerTolerance 
+                const tolerance = typeof part.answer === 'number' && part.answerTolerance
+                  ? part.answerTolerance
                   : 0.05;
                 const result = evaluateAnswerLocally(userAns, part.answer || '', tolerance);
-                return result.isCorrect;
+                return {
+                  isCorrect: result.isCorrect,
+                  feedback: result.feedback,
+                  suggestions: result.suggestions || [],
+                  index: idx
+                };
               }
             } else {
-              const tolerance = typeof part.answer === 'number' && part.answerTolerance 
-                ? part.answerTolerance 
+              const tolerance = typeof part.answer === 'number' && part.answerTolerance
+                ? part.answerTolerance
                 : 0.05;
               const result = evaluateAnswerLocally(userAns, part.answer || '', tolerance);
-              return result.isCorrect;
+              return {
+                isCorrect: result.isCorrect,
+                feedback: result.feedback,
+                suggestions: result.suggestions || [],
+                index: idx
+              };
             }
           })
         );
 
-        const allCorrect = results.every(r => r);
-        
+        // Save individual part feedbacks
+        const newPartFeedbacks: Record<number, {
+          correct: boolean;
+          message: string;
+          suggestions?: string[];
+        }> = {};
+        detailedResults.forEach(result => {
+          newPartFeedbacks[result.index] = {
+            correct: result.isCorrect,
+            message: result.feedback,
+            suggestions: result.suggestions
+          };
+        });
+        setPartFeedbacks(newPartFeedbacks);
+
+        const allCorrect = detailedResults.every(r => r.isCorrect);
+        const incorrectParts = detailedResults.filter(r => !r.isCorrect);
+
         setFeedback({
           correct: allCorrect,
           message: allCorrect
             ? 'All parts correct! Excellent work!'
-            : 'Some answers need correction. Review your work.',
+            : `Part${incorrectParts.length > 1 ? 's' : ''} ${incorrectParts.map(r => exercise.parts?.[r.index]?.label).join(', ')} need${incorrectParts.length === 1 ? 's' : ''} correction.`,
           usedAI: geminiService.isAvailable()
         });
 
@@ -258,23 +302,65 @@ export function ExerciseView({ exercise, allExercises, completedExercises, onCom
               {/* Multi-part questions */}
               {exercise.type === 'multi-part' && exercise.parts && (
                 <div className="space-y-4">
-                  {exercise.parts.map((part, idx) => (
-                    <div key={idx} className="bg-white rounded-xl p-6 border-2 border-slate-200 hover:border-purple-300 transition-colors">
-                      <label className="block">
-                        <div className="font-bold text-slate-900 text-lg mb-3">
-                          {part.label} {formatMathText(part.question)}
-                        </div>
-                        <input
-                          type="text"
-                          value={partAnswers[idx] || ''}
-                          onChange={(e) => setPartAnswers({ ...partAnswers, [idx]: e.target.value })}
-                          className="w-full px-4 py-3 border-2 border-slate-300 rounded-lg focus:border-purple-500 focus:ring-4 focus:ring-purple-100 transition-all text-lg"
-                          placeholder="Enter your answer"
-                          disabled={isEvaluating}
-                        />
-                      </label>
-                    </div>
-                  ))}
+                  {exercise.parts.map((part, idx) => {
+                    const partFeedback = partFeedbacks[idx];
+                    const hasFeedback = !!partFeedback;
+                    const borderColor = hasFeedback
+                      ? partFeedback.correct
+                        ? 'border-green-400'
+                        : 'border-amber-400'
+                      : 'border-slate-200 hover:border-purple-300';
+
+                    return (
+                      <div key={idx} className={`bg-white rounded-xl p-6 border-2 ${borderColor} transition-colors`}>
+                        <label className="block">
+                          <div className="font-bold text-slate-900 text-lg mb-3 flex items-center gap-2">
+                            {part.label} {formatMathText(part.question)}
+                            {hasFeedback && (
+                              partFeedback.correct ? (
+                                <CheckCircle2 size={20} className="text-green-600" />
+                              ) : (
+                                <AlertCircle size={20} className="text-amber-600" />
+                              )
+                            )}
+                          </div>
+                          <input
+                            type="text"
+                            value={partAnswers[idx] || ''}
+                            onChange={(e) => setPartAnswers({ ...partAnswers, [idx]: e.target.value })}
+                            className="w-full px-4 py-3 border-2 border-slate-300 rounded-lg focus:border-purple-500 focus:ring-4 focus:ring-purple-100 transition-all text-lg"
+                            placeholder="Enter your answer"
+                            disabled={isEvaluating}
+                          />
+                        </label>
+
+                        {/* Individual part feedback */}
+                        {hasFeedback && (
+                          <div className={`mt-4 p-4 rounded-lg ${
+                            partFeedback.correct
+                              ? 'bg-green-50 border border-green-200'
+                              : 'bg-amber-50 border border-amber-200'
+                          }`}>
+                            <p className={`text-sm font-medium ${
+                              partFeedback.correct ? 'text-green-900' : 'text-amber-900'
+                            }`}>
+                              {partFeedback.message}
+                            </p>
+                            {partFeedback.suggestions && partFeedback.suggestions.length > 0 && (
+                              <ul className="mt-2 space-y-1">
+                                {partFeedback.suggestions.map((suggestion, sIdx) => (
+                                  <li key={sIdx} className="text-sm text-amber-800 flex items-start gap-2">
+                                    <span className="text-amber-600">•</span>
+                                    <span>{suggestion}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
               )}
 
