@@ -1,7 +1,7 @@
 import { Handler } from '@netlify/functions';
 
 const GEMINI_API_KEY = process.env.GEMINI_FORM4;
-const GEMINI_MODEL = 'gemini-2.0-flash-exp';
+const GEMINI_MODEL = 'gemini-2.5-pro';
 
 interface HelpRequest {
   question: string;
@@ -63,7 +63,7 @@ Keep your language simple, encouraging, and appropriate for IGCSE students.`;
             }]
           }],
           generationConfig: {
-            temperature: 0.3,
+            temperature: 0,
             topK: 1,
             topP: 1,
             maxOutputTokens: 1024,

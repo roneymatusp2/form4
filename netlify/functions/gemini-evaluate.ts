@@ -1,7 +1,7 @@
 import { Handler } from '@netlify/functions';
 
 const GEMINI_API_KEY = process.env.GEMINI_FORM4;
-const GEMINI_MODEL = 'gemini-2.0-flash-exp';
+const GEMINI_MODEL = 'gemini-2.5-pro';
 
 interface EvaluateRequest {
   userAnswer: string;
@@ -74,10 +74,10 @@ Use British English spelling and terminology.`;
             }]
           }],
           generationConfig: {
-            temperature: 0.3,
+            temperature: 0,
             topK: 1,
             topP: 1,
-            maxOutputTokens: 512,
+            maxOutputTokens: 1024,
           }
         }),
       }
