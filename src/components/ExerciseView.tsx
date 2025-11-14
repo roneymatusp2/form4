@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { CheckCircle2, Lightbulb, RotateCcw, Loader2, Sparkles, HelpCircle, Send, X, AlertCircle } from 'lucide-react';
+import { useState, useRef } from 'react';
+import { CheckCircle2, Lightbulb, RotateCcw, Loader2, Sparkles, HelpCircle, Send, X, AlertCircle, Camera, Upload, Image as ImageIcon } from 'lucide-react';
 import { Exercise } from '../types/exercise';
 import { geminiService } from '../services/geminiService';
 import { evaluateAnswerLocally } from '../utils/answerEvaluation';
@@ -32,7 +32,13 @@ export function ExerciseView({ exercise, allExercises, completedExercises, onCom
   }>>({});
   const [showHint, setShowHint] = useState(false);
   const [isEvaluating, setIsEvaluating] = useState(false);
-  
+
+  // Image upload state
+  const [answerImage, setAnswerImage] = useState<string | null>(null);
+  const [partImages, setPartImages] = useState<Record<number, string>>({});
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [uploadingForPart, setUploadingForPart] = useState<number | null>(null);
+
   // Help panel state
   const [helpQuestion, setHelpQuestion] = useState('');
   const [helpResponse, setHelpResponse] = useState<{
@@ -49,6 +55,49 @@ export function ExerciseView({ exercise, allExercises, completedExercises, onCom
     setFeedback(null);
     setPartFeedbacks({});
     setShowHint(false);
+    setAnswerImage(null);
+    setPartImages({});
+  };
+
+  // Handle image upload
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>, partIndex?: number) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // Check if image
+    if (!file.type.startsWith('image/')) {
+      alert('Please upload an image file');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const base64String = reader.result as string;
+      if (partIndex !== undefined) {
+        setPartImages(prev => ({ ...prev, [partIndex]: base64String }));
+      } else {
+        setAnswerImage(base64String);
+      }
+      setUploadingForPart(null);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const triggerImageUpload = (partIndex?: number) => {
+    setUploadingForPart(partIndex ?? -1);
+    fileInputRef.current?.click();
+  };
+
+  const removeImage = (partIndex?: number) => {
+    if (partIndex !== undefined) {
+      setPartImages(prev => {
+        const newImages = { ...prev };
+        delete newImages[partIndex];
+        return newImages;
+      });
+    } else {
+      setAnswerImage(null);
+    }
   };
 
   const handleAskHelp = async () => {

@@ -12,8 +12,8 @@ export const exercises: Exercise[] = [
         label: '(a)',
         question: 'Use your calculator to work out (47.8 × 9.62)/(32.5 - 7.4). Write down all the figures on your calculator display.',
         type: 'text-input',
-        answer: 18.280557,
-        answerTolerance: 0.000001
+        answer: 18.32015936,
+        answerTolerance: 0.00000001
       },
       {
         label: '(b)',
