@@ -8,6 +8,9 @@
   NODE_VERSION = "20"
   CI = "false"
 
+[functions]
+  node_bundler = "esbuild"
+
 # SPA redirect
 [[redirects]]
   from = "/*"
