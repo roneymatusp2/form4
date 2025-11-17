@@ -624,5 +624,386 @@ export const exercises: Exercise[] = [
     type: 'text-input',
     answer: '3 ± √17',
     hint: 'Complete the square: (x - 3)² = 17'
-  }
+  },
+
+  // Additional Calculator Questions
+  {
+    id: 54,
+    topic: 'Use of Calculator',
+    question: 'Use a calculator to work out the value of ∛729. Write down all the digits you see on your calculator display.',
+    type: 'text-input',
+    answer: 9,
+    answerTolerance: 0.001,
+    hint: 'Use the cube root function on your calculator'
+  },
+  {
+    id: 55,
+    topic: 'Use of Calculator',
+    question: 'Use your calculator to work out the value of √((128² - 36.5)/(9.81³ + 3.14)). Write down all the digits you see on your calculator display.',
+    type: 'text-input',
+    answer: 3.5849625,
+    answerTolerance: 0.0000001,
+    hint: 'Calculate the numerator and denominator separately, then divide and take the square root'
+  },
+  {
+    id: 56,
+    topic: 'Use of Calculator',
+    question: 'Use a calculator to work out the value of the fifth root of (97.8⁴ + 41.7³). Write down all the digits you see on your calculator display.',
+    type: 'text-input',
+    answer: 31.6227766,
+    answerTolerance: 0.0000001,
+    hint: 'Calculate 97.8⁴ + 41.7³ first, then take the fifth root'
+  },
+
+  // Additional Direct and Inverse Proportions Questions
+  {
+    id: 57,
+    topic: 'Direct and Inverse Proportions',
+    question: 'y varies inversely with the square of x. When y = 3, x = 8. Find the value of y when x = 12.',
+    type: 'text-input',
+    answer: 1.33,
+    answerTolerance: 0.01,
+    hint: 'If y ∝ 1/x², then y = k/x². Find k first using y = 3 and x = 8'
+  },
+  {
+    id: 58,
+    topic: 'Direct and Inverse Proportions',
+    question: 'y is directly proportional to the square of x. When y = 18, x = 6. Find the value of y when x = 4.',
+    type: 'text-input',
+    answer: 8,
+    answerTolerance: 0.05,
+    hint: 'If y ∝ x², then y = kx². Find k first'
+  },
+  {
+    id: 59,
+    topic: 'Direct and Inverse Proportions',
+    question: 'p varies inversely with q². When p = 4, q = 9. Find the value of p when q = 6.',
+    type: 'text-input',
+    answer: 9,
+    answerTolerance: 0.05,
+    hint: 'If p ∝ 1/q², then p = k/q²'
+  },
+  {
+    id: 60,
+    topic: 'Direct and Inverse Proportions',
+    question: 'b varies inversely with the cube of c. When b = 3, c = 5. Find a formula for b in terms of c.',
+    type: 'text-input',
+    answer: '375/c³',
+    hint: 'If b ∝ 1/c³, then b = k/c³. Find k = 3 × 5³ = 375'
+  },
+  {
+    id: 61,
+    topic: 'Direct and Inverse Proportions',
+    question: 'y varies inversely with x. When y = 15, x = 4. Find a formula for y in terms of x.',
+    type: 'text-input',
+    answer: '60/x',
+    hint: 'If y ∝ 1/x, then y = k/x. Find k = 15 × 4 = 60'
+  },
+  {
+    id: 62,
+    topic: 'Direct and Inverse Proportions',
+    question: 'y is directly proportional to the square of x. When y = 16, x = 5. Find a formula for y in terms of x.',
+    type: 'text-input',
+    answer: '0.64x²',
+    hint: 'If y ∝ x², then y = kx². Find k = 16/25 = 0.64'
+  },
+  {
+    id: 63,
+    topic: 'Direct and Inverse Proportions',
+    question: 'a varies directly with b. When a = 35, b = 20. Find a formula for a in terms of b.',
+    type: 'text-input',
+    answer: '1.75b',
+    hint: 'If a ∝ b, then a = kb. Find k = 35/20 = 1.75'
+  },
+  {
+    id: 64,
+    topic: 'Direct and Inverse Proportions',
+    question: 'm is directly proportional to √n. When m = 10, n = 6. Find a formula for m in terms of n.',
+    type: 'text-input',
+    answer: '4.08√n',
+    hint: 'If m ∝ √n, then m = k√n. Find k = 10/√6'
+  },
+
+  // Additional Quadratics Solving Questions
+  {
+    id: 65,
+    topic: 'Solving Quadratics by Factorisation, Completing the Square and Using the Quadratic Formula',
+    question: 'Solve for x: (3x + 2)(3x - 4) = 0',
+    type: 'text-input',
+    answer: '-0.67, 1.33',
+    answerTolerance: 0.01,
+    hint: 'Set each factor equal to zero'
+  },
+  {
+    id: 66,
+    topic: 'Solving Quadratics by Factorisation, Completing the Square and Using the Quadratic Formula',
+    question: 'Solve: x² - 7x + 6 = 0',
+    type: 'text-input',
+    answer: '1, 6',
+    hint: 'Factor into (x - 1)(x - 6) = 0'
+  },
+  {
+    id: 67,
+    topic: 'Solving Quadratics by Factorisation, Completing the Square and Using the Quadratic Formula',
+    question: 'Solve the following quadratic equation: 13x = x² + 42',
+    type: 'text-input',
+    answer: '6, 7',
+    hint: 'Rearrange to x² - 13x + 42 = 0, then factor'
+  },
+  {
+    id: 68,
+    topic: 'Solving Quadratics by Factorisation, Completing the Square and Using the Quadratic Formula',
+    question: 'Solve: 4x² + 13x + 9 = 0',
+    type: 'text-input',
+    answer: '-1, -2.25',
+    answerTolerance: 0.01,
+    hint: 'Factor into (4x + 9)(x + 1) = 0'
+  },
+  {
+    id: 69,
+    topic: 'Solving Quadratics by Factorisation, Completing the Square and Using the Quadratic Formula',
+    question: 'Solve: x² - 12 = 0',
+    type: 'text-input',
+    answer: '±3.46',
+    answerTolerance: 0.01,
+    hint: 'x² = 12, so x = ±√12'
+  },
+  {
+    id: 70,
+    topic: 'Solving Quadratics by Factorisation, Completing the Square and Using the Quadratic Formula',
+    question: 'Solve the following by completing the square: x² - 8x - 8 = 0. Give your answers in surd form.',
+    type: 'text-input',
+    answer: '4 ± √24',
+    hint: 'Complete the square: (x - 4)² = 24'
+  },
+  {
+    id: 71,
+    topic: 'Solving Quadratics by Factorisation, Completing the Square and Using the Quadratic Formula',
+    question: 'Solve the following quadratic equation, giving your answers in exact form: x² + 7x + 7 = 0',
+    type: 'text-input',
+    answer: '(-7 ± √21)/2',
+    hint: 'Use the quadratic formula'
+  },
+  {
+    id: 72,
+    topic: 'Solving Quadratics by Factorisation, Completing the Square and Using the Quadratic Formula',
+    question: 'Solve the following quadratic equation, giving your answer accurate to 3 decimal places: 5x² - 5 = 0',
+    type: 'text-input',
+    answer: '±1.000',
+    answerTolerance: 0.001,
+    hint: '5x² = 5, so x² = 1'
+  },
+  {
+    id: 73,
+    topic: 'Solving Quadratics by Factorisation, Completing the Square and Using the Quadratic Formula',
+    question: 'Use the quadratic formula to solve 4x² - 9x = 2. Give your answers correct to 3 decimal places.',
+    type: 'text-input',
+    answer: '2.456, -0.206',
+    answerTolerance: 0.001,
+    hint: 'Rearrange to 4x² - 9x - 2 = 0 first'
+  },
+
+  // Additional Algebraic Fractions Questions
+  {
+    id: 74,
+    topic: 'Simplify Algebraic Fractions',
+    question: 'Simplify: (7x² + 18x)/(3x² + 8x)',
+    type: 'text-input',
+    answer: 'x(7x + 18)/(x(3x + 8))',
+    hint: 'Factor out x from both numerator and denominator'
+  },
+  {
+    id: 75,
+    topic: 'Simplify Algebraic Fractions',
+    question: 'Simplify: (x + 2)/(x² + 3x + 2)',
+    type: 'text-input',
+    answer: '1/(x + 1)',
+    hint: 'Factor the denominator: (x + 1)(x + 2)'
+  },
+  {
+    id: 76,
+    topic: 'Adding, Subtracting, Multiplying and Dividing Algebraic Fractions',
+    question: 'Express as a single fraction in its simplest form: (7x)/(5y³) - (5x³)/(11y⁴)',
+    type: 'text-input',
+    answer: '(77xy - 25x³)/(55y⁴)',
+    hint: 'Find common denominator: 55y⁴'
+  },
+
+  // Additional Volume and Surface Area Questions
+  {
+    id: 77,
+    topic: 'Volume and Surface Area of 3D Shapes',
+    question: 'Calculate the volume of a cube with side length 4 cm.',
+    type: 'text-input',
+    answer: 64,
+    answerTolerance: 0.1,
+    hint: 'Volume of cube = side³'
+  },
+  {
+    id: 78,
+    topic: 'Volume and Surface Area of 3D Shapes',
+    question: 'A triangular prism has a cross-sectional area of 45 cm² and length 7 cm. Work out the volume of the prism.',
+    type: 'text-input',
+    answer: 315,
+    answerTolerance: 0.1,
+    hint: 'Volume = cross-sectional area × length'
+  },
+  {
+    id: 79,
+    topic: 'Volume and Surface Area of 3D Shapes',
+    question: 'A cube has a surface area of 96 mm². Find the volume of the cube.',
+    type: 'text-input',
+    answer: 64,
+    answerTolerance: 0.1,
+    hint: 'Surface area = 6s², so s² = 16, s = 4. Volume = s³'
+  },
+  {
+    id: 80,
+    topic: 'Volume and Surface Area of 3D Shapes',
+    question: 'Find the volume of a cylinder with radius 4.5 cm and height 22.4 cm. Give your answer correct to 1 decimal place.',
+    type: 'text-input',
+    answer: 1425.7,
+    answerTolerance: 0.1,
+    hint: 'Volume = πr²h'
+  },
+  {
+    id: 81,
+    topic: 'Volume and Surface Area of 3D Shapes',
+    question: 'Find the volume of a cylinder with diameter 36.8 cm and height 7.2 cm. Give your answer correct to 1 decimal place.',
+    type: 'text-input',
+    answer: 7658.3,
+    answerTolerance: 0.1,
+    hint: 'Radius = diameter/2 = 18.4 cm. Volume = πr²h'
+  },
+  {
+    id: 82,
+    topic: 'Volume and Surface Area of 3D Shapes',
+    question: 'A cylinder has a radius of 15 cm and height of 22 cm. Work out the surface area of the cylinder. Give your answer correct to 1 decimal place.',
+    type: 'text-input',
+    answer: 3495.6,
+    answerTolerance: 0.1,
+    hint: 'Surface area = 2πr² + 2πrh'
+  },
+  {
+    id: 83,
+    topic: 'Volume and Surface Area of 3D Shapes',
+    question: 'A semi-cylinder has a radius of 18.6 cm and height of 35.4 cm. Work out the volume of the semi-cylinder. Give your answer correct to 1 decimal place.',
+    type: 'text-input',
+    answer: 19267.4,
+    answerTolerance: 0.1,
+    hint: 'Volume of semi-cylinder = (πr²h)/2'
+  },
+  {
+    id: 84,
+    topic: 'Volume and Surface Area of 3D Shapes',
+    question: 'A semi-cylinder has a length of 32.6 cm and volume of 9828 cm³. Work out the diameter of the semi-cylinder. Give your answer correct to 1 decimal place.',
+    type: 'text-input',
+    answer: 28.0,
+    answerTolerance: 0.1,
+    hint: 'Volume = (πr²h)/2. Solve for r, then diameter = 2r'
+  },
+
+  // Additional Quadratics Expansion and Factorisation Questions
+  {
+    id: 85,
+    topic: 'Quadratics Expansion and Factorisation',
+    question: 'Expand and simplify: (y - 4)(y - 2)(y + 2)',
+    type: 'text-input',
+    answer: 'y³ - 4y² - 4y + 16',
+    hint: 'First expand (y - 2)(y + 2) = y² - 4, then multiply by (y - 4)'
+  },
+  {
+    id: 86,
+    topic: 'Quadratics Expansion and Factorisation',
+    question: 'Expand and simplify: (x + 3)(x - 3)',
+    type: 'text-input',
+    answer: 'x² - 9',
+    hint: 'This is the difference of squares formula'
+  },
+  {
+    id: 87,
+    topic: 'Quadratics Expansion and Factorisation',
+    question: 'Expand and simplify: (x - 2)²',
+    type: 'text-input',
+    answer: 'x² - 4x + 4',
+    hint: '(a - b)² = a² - 2ab + b²'
+  },
+  {
+    id: 88,
+    topic: 'Quadratics Expansion and Factorisation',
+    question: 'Factorize: x² - 64',
+    type: 'text-input',
+    answer: '(x + 8)(x - 8)',
+    hint: 'This is a difference of squares: a² - b² = (a + b)(a - b)'
+  },
+  {
+    id: 89,
+    topic: 'Quadratics Expansion and Factorisation',
+    question: 'Factorize: 36y² - 49x²',
+    type: 'text-input',
+    answer: '(6y + 7x)(6y - 7x)',
+    hint: 'Difference of squares: (6y)² - (7x)²'
+  },
+  {
+    id: 90,
+    topic: 'Quadratics Expansion and Factorisation',
+    question: 'Write x² + 10x + 28 in the form (x + a)² + b where a and b are constants.',
+    type: 'text-input',
+    answer: '(x + 5)² + 3',
+    hint: 'Complete the square: take half of 10, square it to get 25'
+  },
+  {
+    id: 91,
+    topic: 'Quadratics Expansion and Factorisation',
+    question: 'Write x² - 18x + 3 in the form (x + a)² + b where a and b are constants.',
+    type: 'text-input',
+    answer: '(x - 9)² - 78',
+    hint: 'Complete the square: take half of -18, square it to get 81'
+  },
+  {
+    id: 92,
+    topic: 'Quadratics Expansion and Factorisation',
+    question: 'Express 4x² - 16x + 19 in the form (x + p)² + q where p and q are integers.',
+    type: 'text-input',
+    answer: '4(x - 2)² + 3',
+    hint: 'Factor out 4 first: 4(x² - 4x) + 19, then complete the square'
+  },
+
+  // Pythagoras' Theorem Additional Questions
+  {
+    id: 93,
+    topic: "Pythagoras' Theorem",
+    question: 'Find the value of x in a right-angled triangle with sides 8 cm and 15 cm (where x is the hypotenuse). Give your answer correct to 1 decimal place.',
+    type: 'text-input',
+    answer: 17.0,
+    answerTolerance: 0.1,
+    hint: 'Use Pythagoras: x² = 8² + 15²'
+  },
+  {
+    id: 94,
+    topic: "Pythagoras' Theorem",
+    question: 'ABC is an isosceles triangle where AB = BC. The perpendicular height from B to AC is 14.2 cm and AC = 28 cm. Calculate the length of AB. Give your answer correct to 1 decimal place.',
+    type: 'text-input',
+    answer: 18.6,
+    answerTolerance: 0.1,
+    hint: 'Half of AC is 14 cm. Use Pythagoras: AB² = 14² + 14.2²'
+  },
+  {
+    id: 95,
+    topic: "Pythagoras' Theorem",
+    question: 'The isosceles triangle PQR has PR = QR = 42 cm and PQ = 40 cm. Find the area of triangle PQR.',
+    type: 'text-input',
+    answer: 800,
+    answerTolerance: 1,
+    hint: 'Find the height using Pythagoras: h² = 42² - 20². Area = (1/2) × base × height'
+  },
+  {
+    id: 96,
+    topic: "Pythagoras' Theorem",
+    question: 'Find the value of z in a right-angled triangle with sides 9 cm and 11 cm (where z is the other leg). Give your answer correct to 1 decimal place.',
+    type: 'text-input',
+    answer: 5.7,
+    answerTolerance: 0.1,
+    hint: 'Use Pythagoras: 11² = 9² + z²'
+  },
 ];
