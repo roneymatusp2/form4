@@ -4,12 +4,14 @@ A modern, interactive IGCSE Mathematics practice application with AI-powered tut
 
 ## Features
 
-✨ **44 Comprehensive Exercises** organised by topic
+✨ **53 Comprehensive Exercises** organised by topic
 🤖 **AI Tutor** powered by Google Gemini for intelligent feedback
 📊 **Progress Tracking** with visual indicators
 🎨 **Beautiful UI** with modern card-based design
 🔒 **Secure** API key management with Netlify Functions
 📱 **Responsive** design for all devices
+📐 **Mathematical Input** with visual editor powered by MathLive
+🖊️ **Handwritten Answers** support via image upload
 
 ## Topics Covered
 

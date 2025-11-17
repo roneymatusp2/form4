@@ -1,10 +1,12 @@
 import { useState, useRef } from 'react';
-import { CheckCircle2, Lightbulb, RotateCcw, Loader2, Sparkles, HelpCircle, Send, X, AlertCircle, Camera, Upload, Image as ImageIcon } from 'lucide-react';
+import { CheckCircle2, Lightbulb, RotateCcw, Loader2, Sparkles, HelpCircle, Send, X, AlertCircle, Camera, Image as ImageIcon } from 'lucide-react';
 import { Exercise } from '../types/exercise';
 import { geminiService } from '../services/geminiService';
 import { evaluateAnswerLocally } from '../utils/answerEvaluation';
 import { ExerciseNavigation } from './ExerciseNavigation';
 import { MathText } from './MathText';
+import { MathInput } from './MathInput';
+import { MathInputGuide } from './MathInputGuide';
 
 interface ExerciseViewProps {
   exercise: Exercise;
@@ -377,23 +379,22 @@ export function ExerciseView({ exercise, allExercises, completedExercises, onCom
                               )
                             )}
                           </div>
-                          <div className="flex gap-3">
-                            <input
-                              type="text"
+                          <div className="space-y-3">
+                            <MathInput
                               value={partAnswers[idx] || ''}
-                              onChange={(e) => setPartAnswers({ ...partAnswers, [idx]: e.target.value })}
-                              className="flex-1 px-4 py-3 border-2 border-slate-300 rounded-lg focus:border-purple-500 focus:ring-4 focus:ring-purple-100 transition-all text-lg"
-                              placeholder="Enter your answer or upload image"
+                              onChange={(val) => setPartAnswers({ ...partAnswers, [idx]: val })}
+                              placeholder="Type your answer (use toolbar for fractions, roots, etc.)"
                               disabled={isEvaluating}
                             />
                             <button
                               type="button"
                               onClick={() => triggerImageUpload(idx)}
                               disabled={isEvaluating}
-                              className="px-4 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-bold transition-all flex items-center gap-2 disabled:opacity-50"
+                              className="w-full px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg font-medium transition-all flex items-center justify-center gap-2 disabled:opacity-50 border border-slate-300"
                               title="Upload handwritten answer"
                             >
                               <Camera size={18} />
+                              Or Upload Handwritten Answer
                             </button>
                           </div>
                         </label>
@@ -455,30 +456,26 @@ export function ExerciseView({ exercise, allExercises, completedExercises, onCom
               {exercise.type === 'text-input' && (
                 <div className="space-y-4">
                   <label className="block">
-                    <span className="font-bold text-slate-800 text-lg mb-3 block">Your Answer:</span>
-                    <div className="flex gap-3">
-                      <input
-                        type="text"
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="font-bold text-slate-800 text-lg">Your Answer:</span>
+                      <MathInputGuide />
+                    </div>
+                    <div className="space-y-3">
+                      <MathInput
                         value={userAnswer}
-                        onChange={(e) => setUserAnswer(e.target.value)}
-                        onKeyPress={(e) => {
-                          if (e.key === 'Enter' && userAnswer.trim() && !isEvaluating) {
-                            checkAnswer();
-                          }
-                        }}
-                        className="flex-1 px-6 py-4 border-2 border-slate-300 rounded-xl focus:border-purple-500 focus:ring-4 focus:ring-purple-100 transition-all text-lg"
-                        placeholder="Enter your answer or upload image"
+                        onChange={setUserAnswer}
+                        placeholder="Type your answer (use toolbar for fractions, roots, etc.)"
                         disabled={isEvaluating}
                       />
                       <button
                         type="button"
                         onClick={() => triggerImageUpload()}
                         disabled={isEvaluating}
-                        className="px-6 py-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold transition-all flex items-center gap-2 disabled:opacity-50"
+                        className="w-full px-6 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl font-medium transition-all flex items-center justify-center gap-2 disabled:opacity-50 border border-slate-300"
                         title="Upload handwritten answer"
                       >
                         <Camera size={20} />
-                        Upload
+                        Or Upload Handwritten Answer
                       </button>
                     </div>
                   </label>
