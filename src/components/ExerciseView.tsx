@@ -4,6 +4,7 @@ import { Exercise } from '../types/exercise';
 import { geminiService } from '../services/geminiService';
 import { evaluateAnswerLocally } from '../utils/answerEvaluation';
 import { ExerciseNavigation } from './ExerciseNavigation';
+import { MathText } from './MathText';
 
 interface ExerciseViewProps {
   exercise: Exercise;
@@ -292,16 +293,6 @@ export function ExerciseView({ exercise, allExercises, completedExercises, onCom
     }
   };
 
-  // Format mathematical text
-  const formatMathText = (text: string) => {
-    return text
-      .replace(/\^2/g, '²')
-      .replace(/\^3/g, '³')
-      .replace(/sqrt/gi, '√')
-      .replace(/\*/g, '×')
-      .replace(/\//g, '÷');
-  };
-
   return (
     <div className="max-w-7xl mx-auto animate-fade-in">
       {/* Hidden file input for image uploads */}
@@ -357,7 +348,7 @@ export function ExerciseView({ exercise, allExercises, completedExercises, onCom
               {/* Question */}
               <div className="bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl p-6 border-l-4 border-purple-600">
                 <div className="math-display text-lg text-slate-800 leading-relaxed whitespace-pre-line">
-                  {formatMathText(exercise.question)}
+                  <MathText text={exercise.question} />
                 </div>
               </div>
 
@@ -377,7 +368,7 @@ export function ExerciseView({ exercise, allExercises, completedExercises, onCom
                       <div key={idx} className={`bg-white rounded-xl p-6 border-2 ${borderColor} transition-colors`}>
                         <label className="block">
                           <div className="font-bold text-slate-900 text-lg mb-3 flex items-center gap-2">
-                            {part.label} {formatMathText(part.question)}
+                            {part.label} <MathText text={part.question} />
                             {hasFeedback && (
                               partFeedback.correct ? (
                                 <CheckCircle2 size={20} className="text-green-600" />
@@ -535,7 +526,7 @@ export function ExerciseView({ exercise, allExercises, completedExercises, onCom
                       <span className={`font-bold mr-3 text-lg ${selectedChoice === idx ? 'text-purple-600' : 'text-slate-500'}`}>
                         {String.fromCharCode(65 + idx)}.
                       </span>
-                      <span className="text-slate-800 text-lg">{formatMathText(choice)}</span>
+                      <span className="text-slate-800 text-lg"><MathText text={choice} /></span>
                     </button>
                   ))}
                 </div>

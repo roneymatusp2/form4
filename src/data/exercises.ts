@@ -75,10 +75,10 @@ export const exercises: Exercise[] = [
   {
     id: 4,
     topic: 'Direct and Inverse Proportions',
-    question: 'p is inversely proportional to t. When t = 3, p = 20. Find the value of p when t = 7.',
+    question: 'p is inversely proportional to t. When t = 4, p = 12. Find the value of p when t = 6.',
     type: 'text-input',
-    answer: 8.57,
-    answerTolerance: 0.02,
+    answer: 8,
+    answerTolerance: 0.05,
     hint: 'If p ∝ 1/t, then p = k/t. Find k first.'
   },
   {
@@ -190,11 +190,11 @@ export const exercises: Exercise[] = [
   {
     id: 11,
     topic: 'Quadratics Involving Area and Perimeter',
-    question: 'A rectangle has width x cm and length (x + 6) cm. The perimeter of the rectangle is 50 cm. Work out the value of x.',
+    question: 'A rectangle has width x cm and length (x + 4) cm. The perimeter of the rectangle is 45 cm. Work out the value of x.',
     type: 'text-input',
-    answer: 9.5,
+    answer: 9.25,
     answerTolerance: 0.05,
-    hint: 'Perimeter = 2(width + length) = 50'
+    hint: 'Perimeter = 2(width + length) = 45'
   },
   {
     id: 12,
@@ -519,5 +519,110 @@ export const exercises: Exercise[] = [
     answer: 2,
     answerTolerance: 0.05,
     hint: 'First find f⁻¹(x) by solving y = 5x - 8 for x. Then solve f⁻¹(x) = x.'
+  },
+  
+  // Additional unique exercises from LaTeX
+  {
+    id: 45,
+    topic: 'Use of Calculator',
+    type: 'multi-part',
+    question: 'Calculator computation',
+    parts: [
+      {
+        label: '(a)',
+        question: 'Use your calculator to work out (38.5 × 14.2)/(18.4 - 5.9). Write down all the figures on your calculator display. You must give your answer as a decimal.',
+        type: 'text-input',
+        answer: 43.704,
+        answerTolerance: 0.001
+      },
+      {
+        label: '(b)',
+        question: 'Write your answer to part (a) correct to 1 significant figure.',
+        type: 'text-input',
+        answer: 40,
+        answerTolerance: 0.1
+      }
+    ]
+  },
+  {
+    id: 46,
+    topic: 'Direct and Inverse Proportions',
+    type: 'multi-part',
+    question: 'T is directly proportional to the cube of r. T = 21.76 when r = 4.',
+    parts: [
+      {
+        label: '(a)',
+        question: 'Find a formula for T in terms of r.',
+        type: 'text-input',
+        answer: 'T = 0.34r³'
+      },
+      {
+        label: '(b)',
+        question: 'Work out the value of T when r = 6.',
+        type: 'text-input',
+        answer: 73.44,
+        answerTolerance: 0.1
+      }
+    ],
+    hint: 'If T ∝ r³, then T = kr³. Use the given values to find k.'
+  },
+  {
+    id: 47,
+    topic: "Pythagoras' Theorem",
+    question: 'XYZ is a right-angled triangle with XY = 1.35 m and YZ = 3.25 m. The right angle is at Y. Calculate the length of XZ. Give your answer correct to 3 significant figures.',
+    type: 'text-input',
+    answer: 3.52,
+    answerTolerance: 0.01,
+    hint: 'Use Pythagoras: XZ² = XY² + YZ²'
+  },
+  {
+    id: 48,
+    topic: 'Inverse Functions',
+    question: 'g(x) = 3x + 7. Solve g⁻¹(x) = 2x.',
+    type: 'text-input',
+    answer: -7,
+    answerTolerance: 0.05,
+    hint: 'First find g⁻¹(x), then solve g⁻¹(x) = 2x.'
+  },
+  {
+    id: 49,
+    topic: 'Adding, Subtracting, Multiplying and Dividing Algebraic Fractions',
+    question: 'Write as a single fraction in its simplest form: 2/(y+3) - 1/(y-6)',
+    type: 'text-input',
+    answer: '(y-15)/((y+3)(y-6))',
+    hint: 'Find a common denominator: (y+3)(y-6). Then combine the numerators.'
+  },
+  {
+    id: 50,
+    topic: 'Quadratics Expansion and Factorisation',
+    question: 'Solve the equation by factorisation: x² - 12x + 27 = 0',
+    type: 'text-input',
+    answer: '9, 3',
+    hint: 'Find two numbers that multiply to 27 and add to -12'
+  },
+  {
+    id: 51,
+    topic: 'Volume and Surface Area of 3D Shapes',
+    question: 'A large tin of pet food has the shape of a cylinder with radius 6.5 cm and height 11.5 cm. A new tin will have a radius of 5.8 cm and the same volume. Calculate the height of the new tin. Give your answer correct to one decimal place.',
+    type: 'text-input',
+    answer: 14.4,
+    answerTolerance: 0.1,
+    hint: 'Volume = πr²h. Set the volumes equal: π(6.5²)(11.5) = π(5.8²)(h)'
+  },
+  {
+    id: 52,
+    topic: 'Solving Quadratics by Factorisation, Completing the Square and Using the Quadratic Formula',
+    question: 'Solve this equation algebraically. Give your solutions correct to 2 decimal places: 3x² + 8x - 5 = 0',
+    type: 'text-input',
+    answer: '0.52, -3.19',
+    hint: 'Use the quadratic formula: x = (-b ± √(b² - 4ac)) / 2a'
+  },
+  {
+    id: 53,
+    topic: 'Solving Quadratics by Factorisation, Completing the Square and Using the Quadratic Formula',
+    question: 'Solve x² - 6x - 8 = 0. Write your answer in the form a ± √b where a and b are integers.',
+    type: 'text-input',
+    answer: '3 ± √17',
+    hint: 'Complete the square: (x - 3)² = 17'
   }
 ];
