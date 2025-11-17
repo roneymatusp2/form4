@@ -138,15 +138,29 @@ export function ExerciseView({ exercise, allExercises, completedExercises, onCom
   const checkAnswerWithAI = async (answer: string, correctAnswer: string | number, imageData?: string) => {
     setIsEvaluating(true);
 
+    // Timeout helper
+    const withTimeout = <T,>(promise: Promise<T>, timeoutMs: number): Promise<T> => {
+      return Promise.race([
+        promise,
+        new Promise<T>((_, reject) =>
+          setTimeout(() => reject(new Error('Request timeout')), timeoutMs)
+        )
+      ]);
+    };
+
     try {
       if (geminiService.isAvailable()) {
         try {
-          const result = await geminiService.evaluateAnswer(
-            answer,
-            correctAnswer,
-            exercise.question,
-            exercise.hint,
-            imageData
+          // 30 second timeout
+          const result = await withTimeout(
+            geminiService.evaluateAnswer(
+              answer,
+              correctAnswer,
+              exercise.question,
+              exercise.hint,
+              imageData
+            ),
+            30000
           );
 
           setFeedback({
@@ -161,7 +175,7 @@ export function ExerciseView({ exercise, allExercises, completedExercises, onCom
           }
           return;
         } catch (error) {
-          console.warn('Gemini evaluation failed, falling back to local:', error);
+          console.warn('AI evaluation failed, falling back to local:', error);
         }
       }
 
@@ -173,7 +187,7 @@ export function ExerciseView({ exercise, allExercises, completedExercises, onCom
       
       setFeedback({
         correct: result.isCorrect,
-        message: result.feedback,
+        message: result.feedback + (geminiService.isAvailable() ? ' (AI unavailable, using local check)' : ''),
         suggestions: result.suggestions,
         usedAI: false
       });
@@ -181,6 +195,14 @@ export function ExerciseView({ exercise, allExercises, completedExercises, onCom
       if (result.isCorrect && !isCompleted) {
         setTimeout(() => onComplete(exercise.id), 1500);
       }
+    } catch (error) {
+      console.error('Unexpected error:', error);
+      setFeedback({
+        correct: false,
+        message: 'An error occurred while checking your answer. Please try again.',
+        suggestions: [],
+        usedAI: false
+      });
     } finally {
       setIsEvaluating(false);
     }
@@ -455,16 +477,31 @@ export function ExerciseView({ exercise, allExercises, completedExercises, onCom
                               }
 
                               setIsEvaluating(true);
+                              
+                              // Timeout helper
+                              const withTimeout = <T,>(promise: Promise<T>, timeoutMs: number): Promise<T> => {
+                                return Promise.race([
+                                  promise,
+                                  new Promise<T>((_, reject) =>
+                                    setTimeout(() => reject(new Error('Request timeout')), timeoutMs)
+                                  )
+                                ]);
+                              };
+
                               try {
                                 if (geminiService.isAvailable()) {
                                   try {
                                     const partImage = partImages[idx];
-                                    const result = await geminiService.evaluateAnswer(
-                                      userAns,
-                                      part.answer || '',
-                                      `${part.label} ${part.question}`,
-                                      exercise.hint,
-                                      partImage
+                                    // 30 second timeout
+                                    const result = await withTimeout(
+                                      geminiService.evaluateAnswer(
+                                        userAns,
+                                        part.answer || '',
+                                        `${part.label} ${part.question}`,
+                                        exercise.hint,
+                                        partImage
+                                      ),
+                                      30000
                                     );
                                     setPartFeedbacks({
                                       ...partFeedbacks,
@@ -474,7 +511,9 @@ export function ExerciseView({ exercise, allExercises, completedExercises, onCom
                                         suggestions: result.suggestions || []
                                       }
                                     });
-                                  } catch {
+                                  } catch (error) {
+                                    console.error('AI evaluation failed:', error);
+                                    // Fallback to local evaluation
                                     const tolerance = typeof part.answer === 'number' && part.answerTolerance
                                       ? part.answerTolerance
                                       : 0.05;
@@ -483,7 +522,7 @@ export function ExerciseView({ exercise, allExercises, completedExercises, onCom
                                       ...partFeedbacks,
                                       [idx]: {
                                         correct: result.isCorrect,
-                                        message: result.feedback,
+                                        message: result.feedback + ' (AI unavailable, using local check)',
                                         suggestions: result.suggestions || []
                                       }
                                     });
@@ -502,6 +541,16 @@ export function ExerciseView({ exercise, allExercises, completedExercises, onCom
                                     }
                                   });
                                 }
+                              } catch (error) {
+                                console.error('Unexpected error:', error);
+                                setPartFeedbacks({
+                                  ...partFeedbacks,
+                                  [idx]: {
+                                    correct: false,
+                                    message: 'An error occurred while checking your answer. Please try again.',
+                                    suggestions: []
+                                  }
+                                });
                               } finally {
                                 setIsEvaluating(false);
                               }
