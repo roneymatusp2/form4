@@ -437,6 +437,89 @@ export function ExerciseView({ exercise, allExercises, completedExercises, onCom
                           </div>
                         )}
 
+                        {/* Check button for individual part */}
+                        <div className="mt-4">
+                          <button
+                            onClick={async () => {
+                              const userAns = partAnswers[idx] || '';
+                              if (!userAns.trim()) {
+                                setPartFeedbacks({
+                                  ...partFeedbacks,
+                                  [idx]: {
+                                    correct: false,
+                                    message: 'Please provide an answer.',
+                                    suggestions: []
+                                  }
+                                });
+                                return;
+                              }
+
+                              setIsEvaluating(true);
+                              try {
+                                if (geminiService.isAvailable()) {
+                                  try {
+                                    const partImage = partImages[idx];
+                                    const result = await geminiService.evaluateAnswer(
+                                      userAns,
+                                      part.answer || '',
+                                      `${part.label} ${part.question}`,
+                                      exercise.hint,
+                                      partImage
+                                    );
+                                    setPartFeedbacks({
+                                      ...partFeedbacks,
+                                      [idx]: {
+                                        correct: result.isCorrect,
+                                        message: result.feedback,
+                                        suggestions: result.suggestions || []
+                                      }
+                                    });
+                                  } catch {
+                                    const tolerance = typeof part.answer === 'number' && part.answerTolerance
+                                      ? part.answerTolerance
+                                      : 0.05;
+                                    const result = evaluateAnswerLocally(userAns, part.answer || '', tolerance);
+                                    setPartFeedbacks({
+                                      ...partFeedbacks,
+                                      [idx]: {
+                                        correct: result.isCorrect,
+                                        message: result.feedback,
+                                        suggestions: result.suggestions || []
+                                      }
+                                    });
+                                  }
+                                } else {
+                                  const tolerance = typeof part.answer === 'number' && part.answerTolerance
+                                    ? part.answerTolerance
+                                    : 0.05;
+                                  const result = evaluateAnswerLocally(userAns, part.answer || '', tolerance);
+                                  setPartFeedbacks({
+                                    ...partFeedbacks,
+                                    [idx]: {
+                                      correct: result.isCorrect,
+                                      message: result.feedback,
+                                      suggestions: result.suggestions || []
+                                    }
+                                  });
+                                }
+                              } finally {
+                                setIsEvaluating(false);
+                              }
+                            }}
+                            disabled={isEvaluating || !partAnswers[idx]?.trim()}
+                            className="w-full px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-xl font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg flex items-center justify-center gap-2"
+                          >
+                            {isEvaluating ? (
+                              <>
+                                <Loader2 size={20} className="animate-spin" />
+                                Checking...
+                              </>
+                            ) : (
+                              <>Check {part.label}</>
+                            )}
+                          </button>
+                        </div>
+
                         {/* Individual part feedback */}
                         {hasFeedback && (
                           <div className={`mt-4 p-4 rounded-lg ${
@@ -619,36 +702,51 @@ export function ExerciseView({ exercise, allExercises, completedExercises, onCom
                 </div>
               )}
 
-              {/* Action buttons */}
-              <div className="flex gap-4 pt-4">
-                <button
-                  onClick={checkAnswer}
-                  disabled={
-                    isEvaluating ||
-                    (exercise.type === 'text-input' && !userAnswer) ||
-                    (exercise.type === 'multiple-choice' && selectedChoice === null) ||
-                    (exercise.type === 'multi-part' && Object.keys(partAnswers).length < (exercise.parts?.length || 0))
-                  }
-                  className="flex-1 btn-primary text-white px-8 py-4 rounded-xl font-bold text-lg disabled:opacity-50 disabled:cursor-not-allowed shadow-lg flex items-center justify-center gap-2"
-                >
-                  {isEvaluating ? (
-                    <>
-                      <Loader2 size={22} className="animate-spin" />
-                      Evaluating...
-                    </>
-                  ) : (
-                    <>Check Answer</>
-                  )}
-                </button>
-                <button
-                  onClick={handleReset}
-                  disabled={isEvaluating}
-                  className="px-8 py-4 border-2 border-purple-300 rounded-xl font-bold text-lg text-purple-700 hover:bg-purple-50 transition-all flex items-center gap-2 disabled:opacity-50"
-                >
-                  <RotateCcw size={22} />
-                  Reset
-                </button>
-              </div>
+              {/* Action buttons - Only show for non-multi-part questions */}
+              {exercise.type !== 'multi-part' && (
+                <div className="flex gap-4 pt-4">
+                  <button
+                    onClick={checkAnswer}
+                    disabled={
+                      isEvaluating ||
+                      (exercise.type === 'text-input' && !userAnswer) ||
+                      (exercise.type === 'multiple-choice' && selectedChoice === null)
+                    }
+                    className="flex-1 btn-primary text-white px-8 py-4 rounded-xl font-bold text-lg disabled:opacity-50 disabled:cursor-not-allowed shadow-lg flex items-center justify-center gap-2"
+                  >
+                    {isEvaluating ? (
+                      <>
+                        <Loader2 size={22} className="animate-spin" />
+                        Evaluating...
+                      </>
+                    ) : (
+                      <>Check Answer</>
+                    )}
+                  </button>
+                  <button
+                    onClick={handleReset}
+                    disabled={isEvaluating}
+                    className="px-8 py-4 border-2 border-purple-300 rounded-xl font-bold text-lg text-purple-700 hover:bg-purple-50 transition-all flex items-center gap-2 disabled:opacity-50"
+                  >
+                    <RotateCcw size={22} />
+                    Reset
+                  </button>
+                </div>
+              )}
+
+              {/* Reset button for multi-part questions */}
+              {exercise.type === 'multi-part' && (
+                <div className="flex justify-end pt-4">
+                  <button
+                    onClick={handleReset}
+                    disabled={isEvaluating}
+                    className="px-8 py-4 border-2 border-purple-300 rounded-xl font-bold text-lg text-purple-700 hover:bg-purple-50 transition-all flex items-center gap-2 disabled:opacity-50"
+                  >
+                    <RotateCcw size={22} />
+                    Reset All
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>
