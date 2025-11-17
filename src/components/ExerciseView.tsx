@@ -379,11 +379,26 @@ export function ExerciseView({ exercise, allExercises, completedExercises, onCom
                               )
                             )}
                           </div>
+
+                          {/* Helper text for calculator questions */}
+                          {part.question.toLowerCase().includes('calculator display') && (
+                            <div className="mb-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                              <p className="text-sm text-blue-900 flex items-start gap-2">
+                                <AlertCircle size={16} className="mt-0.5 flex-shrink-0" />
+                                <span>
+                                  <strong>Important:</strong> Enter ALL the digits shown on your calculator display, including all decimal places. For example: <code className="bg-blue-100 px-1.5 py-0.5 rounded text-blue-900">18.32015936</code>
+                                </span>
+                              </p>
+                            </div>
+                          )}
+
                           <div className="space-y-3">
                             <MathInput
                               value={partAnswers[idx] || ''}
                               onChange={(val) => setPartAnswers({ ...partAnswers, [idx]: val })}
-                              placeholder="Type your answer (use toolbar for fractions, roots, etc.)"
+                              placeholder={part.question.toLowerCase().includes('calculator display')
+                                ? "Enter all digits from your calculator (e.g., 18.32015936)"
+                                : "Type your answer (use toolbar for fractions, roots, etc.)"}
                               disabled={isEvaluating}
                             />
                             <button
@@ -460,11 +475,28 @@ export function ExerciseView({ exercise, allExercises, completedExercises, onCom
                       <span className="font-bold text-slate-800 text-lg">Your Answer:</span>
                       <MathInputGuide />
                     </div>
+
+                    {/* Helper text for calculator questions */}
+                    {exercise.question.toLowerCase().includes('calculator') && exercise.question.toLowerCase().includes('display') && (
+                      <div className="mb-3 p-4 bg-blue-50 border-2 border-blue-200 rounded-xl">
+                        <p className="text-sm text-blue-900 flex items-start gap-2">
+                          <AlertCircle size={18} className="mt-0.5 flex-shrink-0" />
+                          <span>
+                            <strong>Important:</strong> Enter ALL the digits shown on your calculator display, including all decimal places. For example: <code className="bg-blue-100 px-2 py-1 rounded font-mono text-blue-900">18.32015936</code>
+                          </span>
+                        </p>
+                      </div>
+                    )}
+
                     <div className="space-y-3">
                       <MathInput
                         value={userAnswer}
                         onChange={setUserAnswer}
-                        placeholder="Type your answer (use toolbar for fractions, roots, etc.)"
+                        placeholder={
+                          exercise.question.toLowerCase().includes('calculator') && exercise.question.toLowerCase().includes('display')
+                            ? "Enter all digits from your calculator (e.g., 18.32015936)"
+                            : "Type your answer (use toolbar for fractions, roots, etc.)"
+                        }
                         disabled={isEvaluating}
                       />
                       <button

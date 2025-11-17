@@ -6,11 +6,11 @@ export const exercises: Exercise[] = [
     id: 1,
     topic: 'Use of Calculator',
     type: 'multi-part',
-    question: 'Calculator computation',
+    question: 'Calculator Computation',
     parts: [
       {
         label: '(a)',
-        question: 'Use your calculator to work out (47.8 × 9.62)/(32.5 - 7.4). Write down all the figures on your calculator display.',
+        question: 'Use your calculator to work out: (47.8 × 9.62)/(32.5 - 7.4). Write down all the figures on your calculator display.',
         type: 'text-input',
         answer: 18.32015936,
         answerTolerance: 0.00000001
@@ -28,7 +28,7 @@ export const exercises: Exercise[] = [
     id: 2,
     topic: 'Use of Calculator',
     type: 'multi-part',
-    question: 'Calculator computation',
+    question: 'Calculator Computation',
     parts: [
       {
         label: '(a)',
@@ -50,11 +50,11 @@ export const exercises: Exercise[] = [
     id: 3,
     topic: 'Use of Calculator',
     type: 'multi-part',
-    question: 'Calculator computation',
+    question: 'Calculator Computation',
     parts: [
       {
         label: '(a)',
-        question: 'Use your calculator to work out (52.3 × 8.9)/(21.5 - 7.6). Write down all the figures on your calculator display. You must give your answer as a decimal.',
+        question: 'Use your calculator to work out: (52.3 × 8.9)/(21.5 - 7.6). Write down all the figures on your calculator display. You must give your answer as a decimal.',
         type: 'text-input',
         answer: 33.48705036,
         answerTolerance: 0.000001
@@ -419,11 +419,11 @@ export const exercises: Exercise[] = [
     id: 36,
     topic: 'Use of Calculator',
     type: 'multi-part',
-    question: 'Calculator computation',
+    question: 'Calculator Computation',
     parts: [
       {
         label: '(a)',
-        question: 'Use your calculator to work out (√95.2 + 21.7)/(6.5² - 30.2). Write down all the figures on your calculator display.',
+        question: 'Use your calculator to work out: (√95.2 + 21.7)/(6.5² - 30.2). Write down all the figures on your calculator display.',
         type: 'text-input',
         answer: 2.6105434,
         answerTolerance: 0.000001
@@ -526,11 +526,11 @@ export const exercises: Exercise[] = [
     id: 45,
     topic: 'Use of Calculator',
     type: 'multi-part',
-    question: 'Calculator computation',
+    question: 'Calculator Computation',
     parts: [
       {
         label: '(a)',
-        question: 'Use your calculator to work out (38.5 × 14.2)/(18.4 - 5.9). Write down all the figures on your calculator display. You must give your answer as a decimal.',
+        question: 'Use your calculator to work out: (38.5 × 14.2)/(18.4 - 5.9). Write down all the figures on your calculator display. You must give your answer as a decimal.',
         type: 'text-input',
         answer: 43.704,
         answerTolerance: 0.001
