@@ -40,12 +40,35 @@ export class GeminiService {
   }
 
   /**
-   * Get help for a specific question
+   * Get help for a specific question (with OpenAI fallback)
    */
   async getHelp(question: string, topic: string, userQuestion: string): Promise<HelpResponse> {
     if (this.useNetlifyFunctions) {
-      // Use Netlify Function
-      const response = await fetch('/.netlify/functions/gemini-help', {
+      // Try Gemini first, fallback to OpenAI
+      try {
+        const response = await fetch('/.netlify/functions/gemini-help', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            question,
+            topic,
+            userQuestion
+          })
+        });
+
+        if (response.ok) {
+          return await response.json();
+        }
+
+        console.warn('⚠️ Gemini help failed, trying OpenAI fallback...');
+      } catch (error) {
+        console.warn('⚠️ Gemini help error, trying OpenAI fallback:', error);
+      }
+
+      // Fallback to OpenAI
+      const response = await fetch('/.netlify/functions/openai-help', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -70,7 +93,7 @@ export class GeminiService {
   }
 
   /**
-   * Evaluate a student's answer using Gemini AI
+   * Evaluate a student's answer using Gemini AI (with OpenAI fallback)
    */
   async evaluateAnswer(
     userAnswer: string,
@@ -79,30 +102,76 @@ export class GeminiService {
     hint?: string,
     imageBase64?: string
   ): Promise<EvaluationResult> {
-    if (this.useNetlifyFunctions) {
-      // Use Netlify Function
-      const response = await fetch('/.netlify/functions/gemini-evaluate', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          userAnswer,
-          correctAnswer,
-          question,
-          hint,
-          imageBase64
-        })
-      });
+    console.log('🤖 AI evaluateAnswer called:', {
+      useNetlifyFunctions: this.useNetlifyFunctions,
+      userAnswer,
+      correctAnswer,
+      question: question.substring(0, 50) + '...',
+      hasImage: !!imageBase64
+    });
 
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Failed to evaluate answer');
+    if (this.useNetlifyFunctions) {
+      // Try Gemini first, fallback to OpenAI
+      try {
+        console.log('📡 Trying Gemini...');
+        const response = await fetch('/.netlify/functions/gemini-evaluate', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            userAnswer,
+            correctAnswer,
+            question,
+            hint,
+            imageBase64
+          })
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          console.log('✅ Gemini result:', result);
+          return result;
+        }
+
+        console.warn('⚠️ Gemini failed, trying OpenAI fallback...');
+      } catch (error) {
+        console.warn('⚠️ Gemini error, trying OpenAI fallback:', error);
       }
 
-      return await response.json();
+      // Fallback to OpenAI
+      try {
+        console.log('📡 Calling OpenAI (o1-preview)...');
+        const response = await fetch('/.netlify/functions/openai-evaluate', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            userAnswer,
+            correctAnswer,
+            question,
+            hint,
+            imageBase64
+          })
+        });
+
+        if (!response.ok) {
+          const error = await response.json();
+          console.error('❌ OpenAI error:', error);
+          throw new Error(error.error || 'Failed to evaluate answer');
+        }
+
+        const result = await response.json();
+        console.log('✅ OpenAI result:', result);
+        return result;
+      } catch (error) {
+        console.error('❌ Both AI providers failed:', error);
+        throw error;
+      }
     } else {
       // Development mode - call API directly
+      console.log('🔧 Development mode - calling API directly');
       return await this.evaluateAnswerDirect(userAnswer, correctAnswer, question, hint, imageBase64);
     }
   }
