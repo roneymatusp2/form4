@@ -1,7 +1,7 @@
 import { Handler } from '@netlify/functions';
 
 const OPENAI_API_KEY = process.env.OPENAI_FORM4;
-const OPENAI_MODEL = 'o1-preview'; // Latest thinking model
+const OPENAI_MODEL = 'gpt-4o'; // GPT-4o for help (o1-preview doesn't support system messages)
 
 interface HelpRequest {
   question: string;
@@ -56,11 +56,18 @@ Keep your language simple, encouraging, and appropriate for IGCSE students.`;
         },
         body: JSON.stringify({
           model: OPENAI_MODEL,
-          messages: [{
-            role: 'user',
-            content: prompt
-          }],
-          max_completion_tokens: 1024
+          messages: [
+            {
+              role: 'system',
+              content: 'You are a patient and encouraging IGCSE mathematics teacher. Always respond with valid JSON only.'
+            },
+            {
+              role: 'user',
+              content: prompt
+            }
+          ],
+          max_tokens: 1024,
+          temperature: 0.7
         }),
       }
     );

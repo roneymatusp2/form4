@@ -1,7 +1,7 @@
 import { Handler } from '@netlify/functions';
 
 const GEMINI_API_KEY = process.env.GEMINI_FORM4;
-const GEMINI_MODEL = 'gemini-2.5-pro';
+const GEMINI_MODEL = 'gemini-1.5-pro-latest'; // Latest stable Gemini model
 
 interface EvaluateRequest {
   userAnswer: string;
@@ -160,12 +160,22 @@ CRITICAL: Respond with ONLY valid JSON. No markdown, no code blocks.
     };
 
   } catch (error) {
-    console.error('Error:', error);
+    console.error('Gemini Evaluate Error:', error);
+
+    // Provide more detailed error information
+    const errorDetails = error instanceof Error
+      ? {
+          message: error.message,
+          stack: error.stack
+        }
+      : { message: 'Unknown error', error: String(error) };
+
     return {
       statusCode: 500,
-      body: JSON.stringify({ 
-        error: 'Failed to evaluate answer',
-        details: error instanceof Error ? error.message : 'Unknown error'
+      body: JSON.stringify({
+        error: 'Failed to evaluate answer with Gemini',
+        details: errorDetails,
+        suggestion: 'Check if GEMINI_FORM4 environment variable is set correctly'
       })
     };
   }

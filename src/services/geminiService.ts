@@ -204,7 +204,7 @@ Respond ONLY with valid JSON in this exact format:
 Keep your language simple, encouraging, and appropriate for IGCSE students.`;
 
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro-latest:generateContent?key=${apiKey}`,
       {
         method: 'POST',
         headers: {
@@ -338,7 +338,7 @@ CRITICAL: Respond with ONLY valid JSON. No markdown, no code blocks.
     }
 
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro-latest:generateContent?key=${apiKey}`,
       {
         method: 'POST',
         headers: {
